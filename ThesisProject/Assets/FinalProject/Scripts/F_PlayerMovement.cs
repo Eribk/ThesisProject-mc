@@ -11,11 +11,13 @@ public class F_PlayerMovement : MonoBehaviour
     private Vector3 movementInput; // Stores movement input received from the player
     public Vector3 movementVector; // Stores the resulting movement vector
     [SerializeField] private float movementSpeed; // Movement speed of the character
+    [SerializeField] ParticleSystem dustParticle;
 
 
     void Start()
     {
         characterRB = GetComponent<Rigidbody>(); // Getting the Rigidbody component attached to the character
+        dustParticle.Stop();
     }
 
     void FixedUpdate()
@@ -27,9 +29,10 @@ public class F_PlayerMovement : MonoBehaviour
             movementVector = transform.right * movementInput.x + transform.forward * movementInput.z;
             movementVector.y = 0; //since we are rotating the entire game object we only want to calculate the movement vector along the x and z axis (ignore the vertical component of movement)
         }
+       
 
-        // Set the velocity of the character's Rigidbody to move it
-        characterRB.velocity = (movementVector * Time.fixedDeltaTime * movementSpeed);
+            // Set the velocity of the character's Rigidbody to move it
+            characterRB.velocity = (movementVector * Time.fixedDeltaTime * movementSpeed);
 
     }
 
@@ -38,10 +41,12 @@ public class F_PlayerMovement : MonoBehaviour
     {
         // Getting movement input values (x and y axes)
         movementInput = new Vector3(input.Get<Vector2>().x, 0, input.Get<Vector2>().y);
+        dustParticle.Play();
     }
     private void OnMovementStop(InputValue input)
     {
         movementVector = Vector3.zero;
+        dustParticle.Stop();
     }
     
 }
